@@ -1,6 +1,7 @@
-import React from "react";
+import React, { useContext, useRef } from "react";
 import styled from "styled-components";
 import PayrollTable from "../common/PayrollTable";
+import PayrollContext from "../contexts/payrollData";
 
 const StyledPayrollLeft = styled.div`
   // border: 1px solid black;
@@ -19,41 +20,23 @@ const columns = [
   { field: "완료날짜", name: "완료날짜", width: 190 },
 ];
 
-const rows = [
-  {
-    name: "(주)월급날",
-    lastName: "오류[1건] / 전체[4]건",
-    firstName: "완료",
-    age: "2020-04-12",
-    test: "2021-05-12",
-  },
-  {
-    name: "이정회계법인",
-    lastName: "오류[0건] / 전체[4]건",
-    firstName: "처리중",
-    age: "2020-04-12",
-    test: "2021-05-12",
-  },
-  {
-    name: "(주)연말정산",
-    lastName: "오류[0건] / 전체[4]건",
-    firstName: "대기중",
-    age: "2020-04-12",
-    test: "2021-05-12",
-  },
-  {
-    name: "(주)시연",
-    lastName: "오류[0건] / 전체[4]건",
-    firstName: "대기중",
-    age: "2020-04-12",
-    test: "2021-05-12",
-  },
-];
-
 const PayrollLeft = () => {
+  const textInput = useRef();
+
+  const copy = () => {
+    const el = textInput.current;
+    el.select();
+    document.execCommand("copy");
+  };
+  const { payrollState, payrollActions } = useContext(PayrollContext);
   return (
     <StyledPayrollLeft>
-      <PayrollTable height="627px" rows={rows} columns={columns} />
+      <PayrollTable
+        height="627px"
+        rows={payrollState.payrollRows}
+        onSendFailed={payrollActions.onSendFailed}
+        columns={columns}
+      />
     </StyledPayrollLeft>
   );
 };

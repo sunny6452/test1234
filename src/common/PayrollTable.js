@@ -1,4 +1,5 @@
-import React, { useEffect } from "react";
+import React, { useContext, useState } from "react";
+import PayrollContext from "../contexts/payrollData";
 import Table from "@material-ui/core/Table";
 import TableContainer from "@material-ui/core/TableContainer";
 import TablePagination from "@material-ui/core/TablePagination";
@@ -36,53 +37,89 @@ const useStyles = makeStyles({
 
 const PayrollTable = (props) => {
   const classes = useStyles();
-  const [selected, setSelected] = React.useState([]);
+  const [selectedName, setSelectedName] = React.useState([]);
   const [page, setPage] = React.useState(0);
-  const [rowsPerPage, setRowsPerPage] = React.useState(11);
+  const [rowsPerPage, setRowsPerPage] = React.useState(12);
+  const { payrollState, payrollActions } = useContext(PayrollContext);
+  const { setSelectedComCd, setSelectedDBName } = payrollActions;
+  const { selectedComCd, selectedDBName } = payrollState;
+
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
   };
 
   const handleChangeRowsPerPage = (event) => {
-    setRowsPerPage(parseInt(event.target.value, 10));
+    setRowsPerPage(parseInt(event.target.value, 12));
     setPage(0);
   };
 
   const handleSelectAllClick = (event) => {
     if (event.target.checked) {
-      const newSelecteds = props.rows.map((n) => n.name);
-      setSelected(newSelecteds);
+      const newSelectedNames = props.rows.map((n) => n.name);
+      const newSelectedComCds = props.rows.map((n) => n.htmComCd);
+      const newSelectedDbNames = props.rows.map((n) => n.dbName);
+      console.log("props", newSelectedDbNames);
+      console.log("test");
+      setSelectedName(newSelectedNames);
+      if (!props.failed) {
+        setSelectedComCd(newSelectedComCds);
+        setSelectedDBName(newSelectedDbNames);
+      }
+
       return;
     }
-    setSelected([]);
+
+    setSelectedName([]);
+    if (!props.failed) {
+      setSelectedComCd([]);
+      setSelectedDBName([]);
+    }
   };
 
-  const handleClick = (event, name) => {
-    const selectedIndex = selected.indexOf(name);
-    let newSelected = [];
+  const handleClick = (event, name, htmComCd, dbName) => {
+    const selectedIndex = selectedName.indexOf(name);
+
+    let newSelectedName = [];
+    let newSelectedComCd = [];
+    let newSelectedDBName = [];
 
     if (selectedIndex === -1) {
-      newSelected = newSelected.concat(selected, name);
+      //체크했을 때 일괄발송을 위한 ComCd, Name, DB이름 저장
+      newSelectedName = newSelectedName.concat(selectedName, name);
+      newSelectedComCd = newSelectedComCd.concat(selectedComCd, htmComCd);
+      newSelectedDBName = newSelectedDBName.concat(selectedDBName, dbName);
     } else if (selectedIndex === 0) {
-      newSelected = newSelected.concat(selected.slice(1));
-    } else if (selectedIndex === selected.length - 1) {
-      newSelected = newSelected.concat(selected.slice(0, -1));
+      newSelectedName = newSelectedName.concat(selectedName.slice(1));
+      newSelectedComCd = newSelectedComCd.concat(selectedComCd.slice(1));
+      newSelectedDBName = newSelectedDBName.concat(selectedDBName.slice(1));
+    } else if (selectedIndex === selectedName.length - 1) {
+      newSelectedName = newSelectedName.concat(selectedName.slice(0, -1));
+      newSelectedComCd = newSelectedComCd.concat(selectedComCd.slice(0, -1));
+      newSelectedDBName = newSelectedDBName.concat(selectedDBName.slice(0, -1));
     } else if (selectedIndex > 0) {
-      newSelected = newSelected.concat(
-        selected.slice(0, selectedIndex),
-        selected.slice(selectedIndex + 1)
+      newSelectedName = newSelectedName.concat(
+        selectedName.slice(0, selectedIndex),
+        selectedName.slice(selectedIndex + 1)
+      );
+      newSelectedComCd = newSelectedComCd.concat(
+        selectedComCd.slice(0, selectedIndex),
+        selectedComCd.slice(selectedIndex + 1)
+      );
+      newSelectedDBName = newSelectedDBName.concat(
+        selectedDBName.slice(0, selectedIndex),
+        selectedDBName.slice(selectedIndex + 1)
       );
     }
 
-    setSelected(newSelected);
+    setSelectedName(newSelectedName);
+    if (!props.failed) {
+      //발송실패 페이지에서는 db, comcd 정보를 저장하지 않음.
+      setSelectedComCd(newSelectedComCd);
+      setSelectedDBName(newSelectedDBName);
+    }
   };
 
-  const isSelected = (name) => selected.indexOf(name) !== -1;
-  useEffect(() => {
-    if (props.colsCount === 2) {
-      setRowsPerPage(10);
-    }
-  }, [props]);
+  const isSelected = (name) => selectedName.indexOf(name) !== -1;
 
   return (
     <Paper style={{ borderRadius: 10, overflowY: "hidden" }}>
@@ -98,7 +135,9 @@ const PayrollTable = (props) => {
                 <Checkbox
                   size="small"
                   color="primary"
-                  onChange={handleSelectAllClick}
+                  onChange={(e) => {
+                    handleSelectAllClick(e);
+                  }}
                   inputProps={{ "aria-label": "sall desserts" }}
                 />
               </TableCell>
@@ -116,59 +155,81 @@ const PayrollTable = (props) => {
             </TableRow>
           </TableHead>
           <TableBody>
-            {props.rows
-              .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-              .map((row, index) => {
-                const isItemSelected = isSelected(row.name);
-                const labelId = `enhanced-table-checkbox-${index}`;
-                return (
-                  <TableRow
-                    hover
-                    onClick={(event) => handleClick(event, row.name)}
-                    role="checkbox"
-                    aria-checked={isItemSelected}
-                    tabIndex={-1}
-                    key={index}
-                    selected={isItemSelected}
-                  >
-                    <TableCell align="center" padding="checkbox">
-                      <Checkbox
-                        color="primary"
-                        size="small"
-                        checked={isItemSelected}
-                        inputProps={{
-                          "aria-labelledby": labelId,
-                        }}
-                      />
-                    </TableCell>
-                    {Object.values(row).map((item, rowIndex) => {
-                      var onSendFailed = () => {};
-                      if (rowIndex === 1) {
-                        onSendFailed = () => {
-                          props.history.push("./sendfailed");
-                        };
+            {props.rows !== undefined ? (
+              props.rows
+                .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                .map((row, index) => {
+                  const isItemSelected = isSelected(row.name);
+                  const labelId = `enhanced-table-checkbox-${index}`;
+                  return (
+                    <TableRow
+                      hover
+                      onClick={(event) =>
+                        handleClick(event, row.name, row.htmComCd, row.dbName)
                       }
-                      return (
-                        <TableCell
-                          className={classes.bodyCell}
-                          key={rowIndex}
-                          onClick={onSendFailed}
-                        >
-                          {item}
-                        </TableCell>
-                      );
-                    })}
-                  </TableRow>
-                );
-              })}
+                      role="checkbox"
+                      aria-checked={isItemSelected}
+                      tabIndex={-1}
+                      key={index}
+                      selected={isItemSelected}
+                    >
+                      <TableCell align="center" padding="checkbox">
+                        <Checkbox
+                          color="primary"
+                          size="small"
+                          checked={isItemSelected}
+                          inputProps={{
+                            "aria-labelledby": labelId,
+                          }}
+                        />
+                      </TableCell>
+                      {Object.values(row).map((item, rowIndex) => {
+                        //두번째 행 클릭시 발송실패 페이지 보이게처리
+                        if (rowIndex === 1) {
+                          return (
+                            <TableCell
+                              className={classes.bodyCell}
+                              key={rowIndex}
+                              onClick={(e) => {
+                                !props.failed &&
+                                  props.onSendFailed(
+                                    row.htmComCd,
+                                    row.htmSeq,
+                                    row.name
+                                  );
+                                props.history.push("./sendfailed");
+                              }}
+                            >
+                              {item}
+                            </TableCell>
+                          );
+                        } else if (rowIndex <= 4) {
+                          //5번째 행까지만 보이게 처리
+                          return (
+                            <TableCell
+                              className={classes.bodyCell}
+                              key={rowIndex}
+                            >
+                              {item}
+                            </TableCell>
+                          );
+                        }
+                      })}
+                    </TableRow>
+                  );
+                })
+            ) : (
+              <TableRow></TableRow>
+            )}
           </TableBody>
         </Table>
       </TableContainer>
       <TablePagination
         rowsPerPageOptions={[10]}
         component="div"
-        count={10}
-        rowsPerPage={rowsPerPage}
+        //  count={props.rows.length}
+        count={props.rows.length} //전체 데이터 수 표시
+        rowsPerPage={rowsPerPage} //테이블 몇 열까지 표시할 건지
         page={page}
         onChangePage={handleChangePage}
         onChangeRowsPerPage={handleChangeRowsPerPage}

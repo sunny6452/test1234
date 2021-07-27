@@ -1,7 +1,8 @@
-import React from "react";
+import React, { useContext } from "react";
 import styled from "styled-components";
 import PayrollTable from "../common/PayrollTable";
 import PayrollButton from "../common/PayrollButton";
+import PayrollContext from "../contexts/payrollData";
 
 const ModalOverlay = styled.div`
   box-sizing: border-box;
@@ -67,6 +68,7 @@ const rows = [
   },
 ];
 const SendFailed = ({ history }) => {
+  const { payrollState, payrollActions } = useContext(PayrollContext);
   const onClose = (e) => {
     console.log("test");
     history.push("./");
@@ -77,9 +79,16 @@ const SendFailed = ({ history }) => {
       <ModalInner>
         <StyledStart>
           <div>
-            <p>(주)시연 급여명세서 발송 실패내역</p>
-            <p>2021년 6월</p>
-            <PayrollTable height="500px" rows={rows} columns={columns} />
+            <p style={{ fontWeight: "bold" }}>
+              {payrollState.htmComNm} 급여명세서 발송 실패내역
+            </p>
+            <p>2021년 {payrollState.searchMM}월</p>
+            <PayrollTable
+              height="500px"
+              rows={payrollState.sendFailedRows}
+              columns={columns}
+              failed={true}
+            />
             <PayrollButton buttonName="닫기" onClick={onClose} />
           </div>
         </StyledStart>
