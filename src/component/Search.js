@@ -51,7 +51,14 @@ const TopMenu = () => {
     "11",
     "12",
   ];
-  const selectYastatusList = ["전체", "대기", "진행중", "완료", "오류"];
+  const selectYastatusList = [
+    "전체",
+    "대기",
+    "진행중",
+    "완료",
+    "오류",
+    "발송이력없음",
+  ];
 
   useEffect(() => {
     //payrollActions.onSearch(yy, MM, payday, yastatus);

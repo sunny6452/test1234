@@ -43,6 +43,7 @@ const PayrollProvider = (props) => {
   const [searchpayday, setSearchpayday] = useState("전체"); //일괄 발송할 때 보내야할 payday
   const [selectedComCd, setSelectedComCd] = useState([]); //일괄 발송용
   const [selectedDBName, setSelectedDBName] = useState([]); //일괄 발송용
+  const [selectedPayday, setSelectedPayday] = useState([]); //일괄 발송용
   const [htmComNm, setHtmComNm] = useState(""); //발송실패 팝업에 회사이름
 
   const onSearch = (yy, MM, payday, yastatus, searchComNm) => {
@@ -51,6 +52,7 @@ const PayrollProvider = (props) => {
     else if (yastatus === "진행중") htmState = 2;
     else if (yastatus === "완료") htmState = 8;
     else if (yastatus === "오류") htmState = 9;
+    else if (yastatus === "발송이력없음") htmState = 999;
     axios
       .post("https://api.himgt.net/payMail/mainLoad", {
         htmYy: yy,
@@ -71,6 +73,7 @@ const PayrollProvider = (props) => {
               name: item.htmComNm,
               htm002: item.htm002,
               htm001: item.htm001,
+              htmPayDay: item.htmPayDay,
               htmRegDate: item.htmRegDate,
               htmmDate: item.htmmDate,
               htmComCd: item.htmComCd,
@@ -107,13 +110,14 @@ const PayrollProvider = (props) => {
       });
   };
 
-  const onSendFailed = (htmComCd, htmSeq, htmComNm) => {
+  const onSendFailed = (htmComCd, htmSeq, htmComNm, checkNum) => {
     console.log("htmComCd : ", htmComCd, "htmSeq : ", htmSeq);
     if (htmSeq !== null) {
       axios
         .post("https://api.himgt.net/payMail/getFailListLoad", {
           htmComCd: htmComCd,
           htmSeq: htmSeq,
+          htmFailFlag: checkNum,
         })
         .then((response) => {
           if (response.status !== 200) {
@@ -155,6 +159,7 @@ const PayrollProvider = (props) => {
       searchpayday,
       selectedComCd,
       selectedDBName,
+      selectedPayday,
       htmComNm,
     },
     payrollActions: {
@@ -170,6 +175,7 @@ const PayrollProvider = (props) => {
       setSendFailedRows,
       setSelectedComCd,
       setSelectedDBName,
+      setSelectedPayday,
       setHtmComNm,
     },
   };

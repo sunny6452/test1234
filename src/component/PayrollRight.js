@@ -33,6 +33,10 @@ const StyledPayrollRight = styled.div`
     margin-top: 100px;
     display: table;
     width: 780px;
+    text-align: left;
+    & li {
+      margin-left: 20px;
+    }
   }
 `;
 const useStyles = makeStyles({
@@ -60,8 +64,14 @@ const PayrollRight = () => {
   const classes = useStyles();
   const { SendPayMailActions } = useContext(SendPayMailContext);
   const { payrollState } = useContext(PayrollContext);
-  const { searchyy, searchMM, searchpayday, selectedComCd, selectedDBName } =
-    payrollState;
+  const {
+    searchyy,
+    searchMM,
+    searchpayday,
+    selectedComCd,
+    selectedDBName,
+    selectedPayday,
+  } = payrollState;
   const [htmInsaPerNm, setHtmInsaPerNm] = useState("");
   const [htmInsaPerEmail, setHtmInsaPerEmail] = useState("");
   const [htmInsaPertel, setHtmInsaPertel] = useState("");
@@ -106,7 +116,22 @@ const PayrollRight = () => {
         </div>
         <div className="guideBox">
           <span>
-            * 메일형식, 전달유형 및 알림톡 내용, 메일제목에 대한 안내문구
+            <ul>
+              <span>급여명세서 일괄발송기능 안내입니다.</span>
+              <br />
+              <li>급여대장(기본대장)에 대해서만 발송됩니다.</li>
+              <li>
+                전달유형은 메일+알림톡이며, 메일은 '기본' 형식으로 발송됩니다.
+              </li>
+              <li>
+                급여대장에 마감처리가 되어있는 경우 보이기마감 유무와 상관없이
+                발송됩니다.
+              </li>
+              <li>
+                선택한 지급일에 포함되는 인원이 없는 경우 '대상자 없음'으로
+                표기됩니다.
+              </li>
+            </ul>
           </span>
         </div>
       </div>
@@ -118,7 +143,7 @@ const PayrollRight = () => {
           SendPayMailActions.onSendPayMail(
             searchyy,
             searchMM,
-            searchpayday,
+            selectedPayday,
             htmInsaPerNm,
             htmInsaPerEmail,
             htmInsaPertel,

@@ -12,7 +12,7 @@ const SendPayMailProvider = (props) => {
   const onSendPayMail = (
     searchyy,
     searchMM,
-    searchpayday,
+    selectedPayday,
     htmInsaPerNm,
     htmInsaPerEmail,
     htmInsaPertel,
@@ -23,7 +23,7 @@ const SendPayMailProvider = (props) => {
       "    searchyy, searchMM, searchpayday, htmInsaPerNm, htmInsaPerEmail, htmInsaPertel, htmComCdAry,  htmComDbAry  :",
       searchyy,
       searchMM,
-      searchpayday,
+      selectedPayday,
       htmInsaPerNm,
       htmInsaPerEmail,
       htmInsaPertel,
@@ -46,21 +46,30 @@ const SendPayMailProvider = (props) => {
       alert("발신자 정보를 확인하세요.");
       return;
     }
-    window.confirm(
+    console.log("selectedPayday.length : ", selectedPayday.length);
+    var confirm =
       "년도 : " +
+      searchyy +
+      "   월 : " +
+      searchMM +
+      "   급여일 : " +
+      selectedPayday +
+      " \n" +
+      "선택하신 정보로 발송하시겠습니까?";
+    if (selectedPayday.length === 0)
+      confirm =
+        "년도 : " +
         searchyy +
         "   월 : " +
         searchMM +
-        "   급여일 : " +
-        searchpayday +
-        " \n" +
-        "선택하신 정보로 발송하시겠습니까?"
-    ) &&
+        " 전체 리스트가 발송됩니다.    \n" +
+        "선택하신 정보로 발송하시겠습니까?";
+    window.confirm(confirm) &&
       axios
         .post("https://api.himgt.net/payMail/sendPayMail", {
           htmYy: searchyy,
           htmMm: searchMM,
-          htmPayDay: searchpayday,
+          htmPayDayAry: selectedPayday,
           htmInsaPerNm: htmInsaPerNm,
           htmInsaPerEmail: htmInsaPerEmail,
           pm003: htmInsaPertel,

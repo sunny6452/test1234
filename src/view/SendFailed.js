@@ -41,32 +41,6 @@ const columns = [
   { name: "메시지" },
 ];
 
-const rows = [
-  {
-    no: "1",
-    sabun: "20210615",
-    name: "김성진",
-    message: "이메일 전송 실패(미등록)",
-  },
-  {
-    no: "2",
-    sabun: "20210616",
-    name: "한단비",
-    message: 42,
-  },
-  {
-    no: "3",
-    sabun: "20210617",
-    name: "유성욱",
-    message: 45,
-  },
-  {
-    no: "4",
-    sabun: "20210618",
-    name: "김선희",
-    message: 16,
-  },
-];
 const SendFailed = ({ history }) => {
   const { payrollState, payrollActions } = useContext(PayrollContext);
   const onClose = (e) => {

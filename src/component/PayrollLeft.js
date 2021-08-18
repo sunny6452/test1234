@@ -16,6 +16,7 @@ const columns = [
   { field: "회사명", name: "회사명", width: 190 },
   { field: "처리결과", name: "처리결과", width: 190 },
   { field: "처리상태", name: "처리상태", width: 190 },
+  { field: "급여일", name: "급여일", width: 190 },
   { field: "등록날짜", name: "등록날짜", width: 190 },
   { field: "완료날짜", name: "완료날짜", width: 190 },
 ];
