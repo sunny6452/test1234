@@ -11,6 +11,7 @@ import TableRow from "@material-ui/core/TableRow";
 import Checkbox from "@material-ui/core/Checkbox";
 import { makeStyles } from "@material-ui/core/styles";
 import { withRouter } from "react-router-dom";
+import PayrollButton from "./PayrollButton";
 
 const useStyles = makeStyles({
   headerCell: {
@@ -40,7 +41,7 @@ const PayrollTable = (props) => {
   const [selectedName, setSelectedName] = React.useState([]);
   const [selectedNum, setSelectedNum] = React.useState([]);
   const [page, setPage] = React.useState(0);
-  const [rowsPerPage, setRowsPerPage] = React.useState(12);
+  const [rowsPerPage, setRowsPerPage] = React.useState(props.rowsPerPage);
   const { payrollState, payrollActions } = useContext(PayrollContext);
   const { setSelectedComCd, setSelectedDBName, setSelectedPayday } =
     payrollActions;
@@ -51,7 +52,7 @@ const PayrollTable = (props) => {
   };
 
   const handleChangeRowsPerPage = (event) => {
-    setRowsPerPage(parseInt(event.target.value, 12));
+    setRowsPerPage(parseInt(event.target.value, rowsPerPage));
     setPage(0);
   };
 
@@ -62,8 +63,7 @@ const PayrollTable = (props) => {
       const newSelectedComCds = props.rows.map((n) => n.htmComCd);
       const newSelectedDbNames = props.rows.map((n) => n.dbName);
       const newSelectedPayday = props.rows.map((n) => n.htmPayDay);
-      console.log("props", newSelectedDbNames);
-      console.log("test");
+
       setSelectedNum(newSelectNum);
       setSelectedName(newSelectedNames);
       if (!props.failed) {
@@ -77,7 +77,7 @@ const PayrollTable = (props) => {
 
     setSelectedNum([]);
     setSelectedName([]);
-    if (!props.failed) {
+    if (props.payroll) {
       setSelectedComCd([]);
       setSelectedDBName([]);
       setSelectedPayday([]);
@@ -138,7 +138,7 @@ const PayrollTable = (props) => {
     }
     setSelectedNum(newSelectNum);
     setSelectedName(newSelectedName);
-    if (!props.failed) {
+    if (props.payroll) {
       //발송실패 페이지에서는 db, comcd 정보를 저장하지 않음.
       setSelectedComCd(newSelectedComCd);
       setSelectedDBName(newSelectedDBName);
@@ -154,20 +154,22 @@ const PayrollTable = (props) => {
         <Table style={{ width: props.containerWidth }} padding="none">
           <TableHead>
             <TableRow>
-              <TableCell
-                align="center"
-                padding="checkbox"
-                style={{ height: 50 }}
-              >
-                <Checkbox
-                  size="small"
-                  color="primary"
-                  onChange={(e) => {
-                    handleSelectAllClick(e);
-                  }}
-                  inputProps={{ "aria-label": "sall desserts" }}
-                />
-              </TableCell>
+              {props.payroll && (
+                <TableCell
+                  align="center"
+                  padding="checkbox"
+                  style={{ height: 50 }}
+                >
+                  <Checkbox
+                    size="small"
+                    color="primary"
+                    onChange={(e) => {
+                      handleSelectAllClick(e);
+                    }}
+                    inputProps={{ "aria-label": "sall desserts" }}
+                  />
+                </TableCell>
+              )}
               {props.columns.map((col, index) => {
                 return (
                   <TableCell
@@ -193,6 +195,191 @@ const PayrollTable = (props) => {
                       hover
                       onClick={(event) =>
                         handleClick(
+                          event,
+                          row.name,
+                          row.htmComCd,
+                          row.dbName,
+                          row.htmPayDay,
+                          index
+                        )
+                      }
+                      role="checkbox"
+                      aria-checked={isItemSelected}
+                      tabIndex={-1}
+                      key={index}
+                      selected={isItemSelected}
+                    >
+                      {props.payroll && (
+                        <TableCell align="center" padding="checkbox">
+                          <Checkbox
+                            color="primary"
+                            size="small"
+                            checked={isItemSelected}
+                            inputProps={{
+                              "aria-labelledby": labelId,
+                            }}
+                          />
+                        </TableCell>
+                      )}
+                      {Object.values(row).map((item, rowIndex) => {
+                        //두번째 행 클릭시 발송실패 페이지 보이게처리
+                        if (rowIndex === 1) {
+                          var strArray = [];
+                          if (item !== null) {
+                            strArray = item.split("/");
+
+                            var errorStr = strArray[0];
+                          }
+                          if (strArray[1] !== undefined)
+                            errorStr = errorStr + "/";
+                          return (
+                            <TableCell
+                              className={classes.bodyCell}
+                              key={rowIndex}
+                            >
+                              <span
+                                onClick={(e) => {
+                                  if (!props.failed) {
+                                    payrollActions.onSendFailed(
+                                      row.htmComCd,
+                                      row.htmSeq,
+                                      row.name,
+                                      1
+                                    );
+                                    payrollActions.setHistoryList(true);
+                                    props.history.push("./history");
+                                  }
+                                }}
+                              >
+                                {errorStr}
+                              </span>
+                              <span
+                                onClick={(e) => {
+                                  if (!props.failed) {
+                                    payrollActions.onSendFailed(
+                                      row.htmComCd,
+                                      row.htmSeq,
+                                      row.name,
+                                      0
+                                    );
+                                    payrollActions.setHistoryList(true);
+                                    props.history.push("./history");
+                                  }
+                                }}
+                              >
+                                {strArray[1]}
+                              </span>
+                              {/* {item} */}
+                            </TableCell>
+                          );
+                        } else if (rowIndex <= 5) {
+                          //5번째 행까지만 보이게 처리
+                          return (
+                            <TableCell
+                              className={classes.bodyCell}
+                              key={rowIndex}
+                            >
+                              {item}
+                            </TableCell>
+                          );
+                        }
+                      })}
+                      {props.payroll && (
+                        <TableCell className={classes.bodyCell}>
+                          <PayrollButton
+                            class="more"
+                            buttonName="더보기"
+                            onClick={(e) => {
+                              console.log("row.htmComCd", row.htmComCd);
+                              payrollActions.getTotalResultList(
+                                row.htmComCd,
+                                payrollState.searchyy,
+                                payrollState.searchMM,
+                                row.htmPayDay
+                              );
+                              payrollActions.setHistoryList(false);
+                              props.history.push("./history");
+                            }}
+                          />
+                        </TableCell>
+                      )}
+                    </TableRow>
+                  );
+                })
+            ) : (
+              <TableRow></TableRow>
+            )}
+          </TableBody>
+        </Table>
+      </TableContainer>
+      <TablePagination
+        rowsPerPageOptions={[10]}
+        component="div"
+        //  count={props.rows.length}
+        count={props.rows.length} //전체 데이터 수 표시
+        rowsPerPage={rowsPerPage} //테이블 몇 열까지 표시할 건지
+        page={page}
+        onChangePage={handleChangePage}
+        onChangeRowsPerPage={handleChangeRowsPerPage}
+      />
+    </Paper>
+  );
+};
+
+export default withRouter(PayrollTable);
+
+/*
+const HistoryTable = (props) => {
+  const classes = useStyles();
+
+  return (
+    <Paper style={{ borderRadius: 10, overflowY: "hidden" }}>
+      <TableContainer style={{ height: props.height }}>
+        <Table style={{ width: props.containerWidth }} padding="none">
+          <TableHead>
+            <TableRow>
+              <TableCell
+                align="center"
+                padding="checkbox"
+                style={{ height: 50 }}
+              >
+                <Checkbox
+                  size="small"
+                  color="primary"
+                  onChange={(e) => {
+                    props.handleSelectAllClick(e);
+                  }}
+                  inputProps={{ "aria-label": "sall desserts" }}
+                />
+              </TableCell>
+              {props.columns.map((col, index) => {
+                return (
+                  <TableCell
+                    key={index}
+                    className={classes.headerCell}
+                    style={{ width: col.width, borderRight: "none" }}
+                  >
+                    {col.name}
+                  </TableCell>
+                );
+              })}
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {props.rows !== undefined ? (
+              props.rows
+                .slice(
+                  props.page * props.rowsPerPage,
+                  props.page * props.rowsPerPage + props.rowsPerPage
+                )
+                .map((row, index) => {
+                  const isItemSelected = props.isSelected(index);
+                  const labelId = `enhanced-table-checkbox-${index}`;
+                  return (
+                    <TableRow
+                      hover
+                      onClick={(event) =>
+                        props.handleClick(
                           event,
                           row.name,
                           row.htmComCd,
@@ -242,7 +429,7 @@ const PayrollTable = (props) => {
                                       row.name,
                                       1
                                     );
-                                  props.history.push("./sendfailed");
+                                  props.history.push("./history");
                                 }}
                               >
                                 {errorStr}
@@ -256,12 +443,12 @@ const PayrollTable = (props) => {
                                       row.name,
                                       0
                                     );
-                                  props.history.push("./sendfailed");
+                                  props.history.push("./history");
                                 }}
                               >
                                 {strArray[1]}
                               </span>
-                              {/* {item} */}
+                              {/* {item} 
                             </TableCell>
                           );
                         } else if (rowIndex <= 5) {
@@ -290,13 +477,12 @@ const PayrollTable = (props) => {
         component="div"
         //  count={props.rows.length}
         count={props.rows.length} //전체 데이터 수 표시
-        rowsPerPage={rowsPerPage} //테이블 몇 열까지 표시할 건지
-        page={page}
-        onChangePage={handleChangePage}
-        onChangeRowsPerPage={handleChangeRowsPerPage}
+        rowsPerPage={props.rowsPerPage} //테이블 몇 열까지 표시할 건지
+        page={props.page}
+        onChangePage={props.handleChangePage}
+        onChangeRowsPerPage={props.handleChangeRowsPerPage}
       />
     </Paper>
   );
 };
-
-export default withRouter(PayrollTable);
+*/

@@ -17,12 +17,24 @@ const useStyles = makeStyles({
     float: "right",
     marginRight: 50,
   },
+  more: {
+    padding: 0,
+    width: "7px",
+    height: "20px",
+    marginTop: "0px",
+    fontSize: "10px",
+  },
+  close: {
+    marginLeft: 30,
+  },
 });
 
 const PayrollButton = (props) => {
   const classes = useStyles();
   var classNames = "";
   if (props.class === "search") classNames = classes.search;
+  else if (props.class === "more") classNames = classes.more;
+  else if (props.class === "close") classNames = classes.close;
   return (
     <Button
       variant="contained"

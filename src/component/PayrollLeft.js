@@ -15,10 +15,11 @@ const StyledPayrollLeft = styled.div`
 const columns = [
   { field: "회사명", name: "회사명", width: 190 },
   { field: "처리결과", name: "처리결과", width: 190 },
-  { field: "처리상태", name: "처리상태", width: 190 },
-  { field: "급여일", name: "급여일", width: 190 },
+  { field: "처리상태", name: "처리상태", width: 180 },
+  { field: "급여일", name: "급여일", width: 100 },
   { field: "등록날짜", name: "등록날짜", width: 190 },
   { field: "완료날짜", name: "완료날짜", width: 190 },
+  { field: "더보기", name: "더보기", width: 50 },
 ];
 
 const PayrollLeft = () => {
@@ -35,8 +36,10 @@ const PayrollLeft = () => {
       <PayrollTable
         height="627px"
         rows={payrollState.payrollRows}
-        onSendFailed={payrollActions.onSendFailed}
+        // onSendFailed={payrollActions.onSendFailed}
         columns={columns}
+        rowsPerPage={12}
+        payroll={true}
       />
     </StyledPayrollLeft>
   );

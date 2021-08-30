@@ -8,7 +8,7 @@ const useStyles = makeStyles({
   formControl: {
     width: "200px",
     marginTop: "22px",
-    marginLeft: "80px",
+    marginLeft: "50px",
     "& label": {
       fontWeight: "bold",
     },

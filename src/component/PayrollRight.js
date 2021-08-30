@@ -5,7 +5,7 @@ import Button from "@material-ui/core/Button";
 import { makeStyles } from "@material-ui/core/styles";
 import SendPayMailContext from "../contexts/SendPayMail";
 import PayrollContext from "../contexts/payrollData";
-
+import { withRouter } from "react-router-dom";
 const StyledPayrollRight = styled.div`
   //  border: 1px solid black;
   height: 100%;
@@ -60,9 +60,10 @@ const useStyles = makeStyles({
     },
   },
 });
-const PayrollRight = () => {
+const PayrollRight = (props) => {
   const classes = useStyles();
-  const { SendPayMailActions } = useContext(SendPayMailContext);
+  const { SendPayMailState, SendPayMailActions } =
+    useContext(SendPayMailContext);
   const { payrollState } = useContext(PayrollContext);
   const {
     searchyy,
@@ -72,9 +73,12 @@ const PayrollRight = () => {
     selectedDBName,
     selectedPayday,
   } = payrollState;
-  const [htmInsaPerNm, setHtmInsaPerNm] = useState("");
-  const [htmInsaPerEmail, setHtmInsaPerEmail] = useState("");
-  const [htmInsaPertel, setHtmInsaPertel] = useState("");
+  // const [htmInsaPerNm, setHtmInsaPerNm] = useState("");
+  // const [htmInsaPerEmail, setHtmInsaPerEmail] = useState("");
+  // const [htmInsaPertel, setHtmInsaPertel] = useState("");
+  const { htmInsaPerNm, htmInsaPerEmail, htmInsaPertel } = SendPayMailState;
+  const { setHtmInsaPerNm, setHtmInsaPerEmail, setHtmInsaPertel } =
+    SendPayMailActions;
 
   return (
     <StyledPayrollRight>
@@ -139,17 +143,28 @@ const PayrollRight = () => {
         variant="contained"
         color="primary"
         className={classes.searchButton}
-        onClick={(e) =>
-          SendPayMailActions.onSendPayMail(
-            searchyy,
-            searchMM,
-            selectedPayday,
-            htmInsaPerNm,
-            htmInsaPerEmail,
-            htmInsaPertel,
-            selectedComCd,
-            selectedDBName
-          )
+        onClick={
+          (e) => {
+            SendPayMailActions.getPayMailPreview(
+              searchyy,
+              searchMM,
+              selectedComCd,
+              selectedDBName,
+              selectedPayday,
+              props.history
+            );
+            //props.history.push("/confirm");
+          }
+          // SendPayMailActions.onSendPayMail(
+          //   searchyy,
+          //   searchMM,
+          //   selectedPayday,
+          //   htmInsaPerNm,
+          //   htmInsaPerEmail,
+          //   htmInsaPertel,
+          //   selectedComCd,
+          //   selectedDBName
+          // )
         }
       >
         일괄발송
@@ -158,4 +173,4 @@ const PayrollRight = () => {
   );
 };
 
-export default PayrollRight;
+export default withRouter(PayrollRight);
