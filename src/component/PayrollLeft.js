@@ -23,14 +23,14 @@ const columns = [
 ];
 
 const PayrollLeft = () => {
-  const textInput = useRef();
+  // const textInput = useRef();
 
-  const copy = () => {
-    const el = textInput.current;
-    el.select();
-    document.execCommand("copy");
-  };
-  const { payrollState, payrollActions } = useContext(PayrollContext);
+  // const copy = () => {
+  //   const el = textInput.current;
+  //   el.select();
+  //   document.execCommand("copy");
+  // };
+  const { payrollState } = useContext(PayrollContext);
   return (
     <StyledPayrollLeft>
       <PayrollTable

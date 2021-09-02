@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useContext } from "react";
 import PayrollContext from "../contexts/payrollData";
 import Table from "@material-ui/core/Table";
 import TableContainer from "@material-ui/core/TableContainer";
@@ -319,8 +319,8 @@ const PayrollTable = (props) => {
         count={props.rows.length} //전체 데이터 수 표시
         rowsPerPage={rowsPerPage} //테이블 몇 열까지 표시할 건지
         page={page}
-        onChangePage={handleChangePage}
-        onChangeRowsPerPage={handleChangeRowsPerPage}
+        onPageChange={handleChangePage}
+        //onChangeRowsPerPage={handleChangeRowsPerPage}
       />
     </Paper>
   );

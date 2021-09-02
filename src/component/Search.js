@@ -1,5 +1,6 @@
 import React, { useContext, useState } from "react";
 import { makeStyles } from "@material-ui/core/styles";
+import styled from "styled-components";
 import TextField from "@material-ui/core/TextField";
 import SelectBox from "../common/PayrollSelectBox";
 import PayrollButton from "../common/PayrollButton";
@@ -11,10 +12,10 @@ import CheckBoxIcon from "@material-ui/icons/CheckBox";
 import { useEffect } from "react";
 import axios from "axios";
 
-var url = "https://api.himgt.net/payMail/searchPayday";
+//var url = "https://api.himgt.net/payMail/searchPayday";
 const icon = <CheckBoxOutlineBlankIcon fontSize="small" />;
 const checkedIcon = <CheckBoxIcon fontSize="small" />;
-
+var jsession = "";
 const TopMenu = () => {
   const useStyles = makeStyles({
     menuc: {
@@ -45,9 +46,34 @@ const TopMenu = () => {
       top: "85px",
       left: "1080px",
     },
+    popperDisablePortal: {
+      left: 1080,
+    },
+    auto: {
+      color: "rgba(0, 0, 0, 0.87)",
+      border: "none",
+      cursor: "default",
+      height: "32px",
+      display: "inline-flex",
+      outline: 0,
+      padding: 15,
+      marginLeft: 10,
+      fontSize: "0.8125rem",
+      boxSizing: "border-box",
+      transition:
+        "background-color 300ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,box-shadow 300ms cubic-bezier(0.4, 0, 0.2, 1) 0ms",
+      alignItems: "center",
+      fontFamily: "Roboto",
+      whiteSpace: "nowrap",
+      borderRadius: "16px",
+      verticalAlign: "middle",
+      justifyContent: "center",
+      textDecoration: "none",
+      backgroundColor: "#e0e0e0",
+    },
   });
   const { payrollState, payrollActions } = useContext(PayrollContext);
-  const { yy, MM, payday, totalResultListRows } = payrollState;
+  const { yy, MM, payday } = payrollState;
   const classes = useStyles();
   const [yastatus, setYastatus] = useState("전체");
   const [searchComNm, setSearchComNm] = useState([]);
@@ -76,28 +102,19 @@ const TopMenu = () => {
     "오류",
     "발송이력없음",
   ];
-  const [test, setTest] = useState([]);
 
+  var test = [];
   useEffect(() => {
-    console.log(
-      "sessionStorage.getItem('sabun')",
-      sessionStorage.getItem("sabun")
-    );
-    //payrollActions.onSearch(yy, MM, payday, yastatus);
     axios
       .post("https://api.himgt.net/payMail/searchPayday")
       .then((response) => {
         if (
           response.status !== 200 ||
-          response.data.ResultCodeVo.resultCode !== 200
+          response.data.ResultCodeVo.resultCode !== "200"
         ) {
-          console.log(
-            "response.status !== 200",
-            response.status !== 200,
-            response.data
-          );
           alert("오류");
         } else {
+          console.log("??????", response.data.PayMailVo);
           const data = response.data.PayMailVo;
           //console.log("data", data);
           var getPayday = ["전체"];
@@ -113,7 +130,7 @@ const TopMenu = () => {
       .then((response) => {
         if (
           response.status !== 200 ||
-          response.data.ResultCodeVo.resultCode !== 200
+          response.data.ResultCodeVo.resultCode !== "200"
         ) {
           alert("오류");
           console.log(
@@ -170,24 +187,25 @@ const TopMenu = () => {
         className={classes.textField}
       /> */}
       <Autocomplete
+        disablePortal={true}
+        //open
         multiple
         className={classes.Autocomplete}
+        classes={{
+          paper: classes.paper,
+          popper: classes.popper,
+          listbox: classes.listbox,
+          option: classes.option,
+          popperDisablePortal: classes.popperDisablePortal,
+        }}
         id="checkboxes-tags-demo"
         //limitTags={1}
         options={autoCompleteList}
         disableCloseOnSelect
         getOptionLabel={(option) => option}
         renderOption={(option, { selected }) => {
-          // console.log("test", searchComNm);
-          //console.log("option", option);
-          //var test2 = [];
-          // selected === true
-          //   ? setSearchComNm(searchComNm.push(option))
-          //   : setSearchComNm(searchComNm.slice(option));
-          // console.log("test", searchComNm);
-          //setSearchComNm(test);
           return (
-            <React.Fragment>
+            <div>
               <Checkbox
                 icon={icon}
                 checkedIcon={checkedIcon}
@@ -195,13 +213,19 @@ const TopMenu = () => {
                 checked={selected}
               />
               {option}
-            </React.Fragment>
+            </div>
           );
         }}
-        // value={searchComNm}
-        // style={{ width: 500 }}
+        renderTags={(value, getTagProps) => {
+          console.log("getTagProps", getTagProps);
+          test = value;
+          return value.map((item, index) => (
+            <div className={classes.auto} key={index}>
+              {item}
+            </div>
+          ));
+        }}
         renderInput={(params) => {
-          // console.log("param", params);
           return (
             <TextField
               {...params}
@@ -218,7 +242,7 @@ const TopMenu = () => {
         class="search"
         buttonName="검색"
         onClick={(e) => {
-          payrollActions.onSearch(yy, MM, payday, yastatus, searchComNm);
+          payrollActions.onSearch(yy, MM, payday, yastatus, test);
           //  payrollActions.setSelectedDBName([]);
           //   payrollActions.setSelectedComCd([]);
         }}

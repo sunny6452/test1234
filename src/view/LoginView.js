@@ -40,22 +40,58 @@ const LoginView = ({ history }) => {
         } else {
           userActions.setUserid(id);
           userActions.setUserpw(password);
+
           // userActions.setSabun(response.data.resultMsg);
           sessionStorage.setItem("userid", id);
           sessionStorage.setItem("userpw", password);
           sessionStorage.setItem(
-            "resultMsg",
-            response.data.ResultCodeVo.resultMsg
+            "JSESSIONID",
+            response.data.PayMailVo.jsessionid
           );
+          console.log("JSESSIONID", response.data.PayMailVo.jsessionid);
           sessionStorage.setItem("sabun", response.data.PayMailVo.htmPerSabun);
-          history.push({
+          /* history.push({
             pathname: "/",
             state: {
               userid: id,
               userpw: password,
               sabun: response.data.PayMailVo.htmPerSabun,
+              //JSESSIONID: response.data.PayMailVo.jsessionid,
             },
           });
+          */
+          axios
+            .post(
+              "https://api.himgt.net/payMail/getAutoComplete",
+              {},
+              {
+                headers: {
+                  credentials: "include",
+                },
+              }
+            )
+            .then((response) => {
+              if (
+                response.status !== 200 ||
+                response.data.ResultCodeVo.resultCode !== 200
+              ) {
+                alert("오류");
+                console.log(
+                  "response.status !== 2002222222222",
+                  response.status !== 200,
+                  response.data
+                );
+              } else {
+                console.log(" response.data", response.data.PayMailVo);
+                const data = response.data.PayMailVo;
+                console.log("data", data);
+                //setAutoCompleteList(data);
+                //setSearchComNm(data);
+              }
+            })
+            .catch((e) => {
+              alert("Error!! 관리자에게 문의하세요.");
+            });
         }
       })
       .catch((e) => {

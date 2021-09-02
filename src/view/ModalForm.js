@@ -1,10 +1,9 @@
-import React, { useContext, useState } from "react";
+import React, { useContext } from "react";
 import styled from "styled-components";
 import PayrollTable from "../common/PayrollTable";
 import PayrollButton from "../common/PayrollButton";
 import PayrollContext from "../contexts/payrollData";
 import SendPayMailContext from "../contexts/SendPayMail";
-import { useEffect } from "react";
 
 const ModalOverlay = styled.div`
   box-sizing: border-box;
@@ -138,16 +137,18 @@ const SendFailed = (props) => {
 export const ConfirmBox = ({ history }) => {
   const { SendPayMailState, SendPayMailActions } =
     useContext(SendPayMailContext);
-  const { payrollState } = useContext(PayrollContext);
+  const { payrollState, payrollActions } = useContext(PayrollContext);
   const {
     searchyy,
     searchMM,
-    searchpayday,
+    //searchpayday,
     selectedComCd,
     selectedDBName,
     selectedPayday,
   } = payrollState;
-  const { htmInsaPerNm, htmInsaPerEmail, htmInsaPertel } = SendPayMailState;
+  // const { htmInsaPerNm, htmInsaPerEmail, htmInsaPertel } = SendPayMailState;
+  const { setSelectedComCd, setSelectedDBName, setSelectedPayday } =
+    payrollActions;
   return (
     <ModalOverlay>
       <ModalInner>
@@ -182,6 +183,9 @@ export const ConfirmBox = ({ history }) => {
               class="close"
               onClick={(e) => {
                 SendPayMailActions.setPayMailCountList([]);
+                setSelectedComCd([]);
+                setSelectedDBName([]);
+                setSelectedPayday([]);
                 history.push("/");
               }}
             />

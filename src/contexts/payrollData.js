@@ -7,6 +7,7 @@ const PayrollContext = createContext({
     sendFailedRows: [],
     selectedComCd: [],
     selectedDBName: [],
+    selectedPayday: [],
     totalResultListRows: [],
     historyList: Boolean,
     yy: "",
@@ -30,6 +31,7 @@ const PayrollContext = createContext({
     onSendFailed: () => {},
     setSelectedComCd: () => {},
     setSelectedDBName: () => {},
+    setSelectedPayday: () => {},
     setHtmComNm: () => {},
     getTotalResultList: () => {},
     setTotalResultListRows: () => {},
@@ -54,6 +56,14 @@ const PayrollProvider = (props) => {
   const [historyList, setHistoryList] = useState(false); //모달 뭐띄울지 결정하는애
 
   const onSearch = (yy, MM, payday, yastatus, searchComNm) => {
+    console.log(
+      "yy, MM, payday, yastatus, searchComNm",
+      yy,
+      MM,
+      payday,
+      yastatus,
+      searchComNm
+    );
     var htmState = 0;
     if (yastatus === "대기") htmState = 1;
     else if (yastatus === "진행중") htmState = 2;
@@ -71,8 +81,13 @@ const PayrollProvider = (props) => {
       .then((response) => {
         if (
           response.status !== 200 ||
-          response.data.ResultCodeVo.resultCode !== 200
+          response.data.ResultCodeVo.resultCode !== "200"
         ) {
+          console.log(
+            " response.data.ResultCodeVo !== 200",
+            response.status !== 200,
+            response.data.ResultCodeVo
+          );
           alert("오류");
         } else {
           const data = response.data.PayMailVo;
@@ -121,14 +136,6 @@ const PayrollProvider = (props) => {
   };
 
   const onSendFailed = (htmComCd, htmSeq, htmComNm, checkNum) => {
-    console.log(
-      "htmComCd : ",
-      htmComCd,
-      "htmSeq : ",
-      htmSeq,
-      "checkNum : ",
-      checkNum
-    );
     if (htmSeq !== null) {
       axios
         .post("https://api.himgt.net/payMail/getResultListLoad", {
@@ -139,7 +146,7 @@ const PayrollProvider = (props) => {
         .then((response) => {
           if (
             response.status !== 200 ||
-            response.data.ResultCodeVo.resultCode !== 200
+            response.data.ResultCodeVo.resultCode !== "200"
           ) {
             alert("오류");
           } else {
@@ -168,13 +175,6 @@ const PayrollProvider = (props) => {
   };
 
   const getTotalResultList = (htmComCd, htmYy, htmMm, htmPayDay) => {
-    console.log(
-      "htmComCd, htmYy, htmMm, htmPayDay",
-      htmComCd,
-      htmYy,
-      htmMm,
-      htmPayDay
-    );
     axios
       .post("https://api.himgt.net/payMail/getToTalResultListLoad", {
         htmComCd: htmComCd,
@@ -185,7 +185,7 @@ const PayrollProvider = (props) => {
       .then((response) => {
         if (
           response.status !== 200 ||
-          response.data.ResultCodeVo.resultCode !== 200
+          response.data.ResultCodeVo.resultCode !== "200"
         ) {
           alert("오류");
         } else {

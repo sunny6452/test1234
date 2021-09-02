@@ -74,11 +74,14 @@ const SendPayMailProvider = (props) => {
           htmComDbAry: htmComDbAry,
         })
         .then((response) => {
-          if (response.status !== 200) {
+          if (
+            response.status !== 200 ||
+            response.data.ResultCodeVo.resultCode !== "200"
+          ) {
             alert("오류");
           } else {
-            const data = response.data;
-            alert(data.resultMsg);
+            const data = response.data.PayMailVo;
+            alert(response.data.ResultCodeVo.resultMsg);
           }
         })
         .catch((e) => {
@@ -103,7 +106,7 @@ const SendPayMailProvider = (props) => {
       htmPayDayAry
     );
     var trimCheck = / /gi;
-    var emailCheck = /^[A-Za-z0-9_\.\-]+@[A-Za-z0-9\-]+\.[A-Za-z0-9\-]+/;
+    var emailCheck = /^[A-Za-z0-9_.-]+@[A-Za-z0-9-]+\.[A-Za-z0-9-]+/;
     if (
       htmInsaPerNm.replace(trimCheck, "") === "" ||
       htmInsaPerEmail.replace(trimCheck, "") === "" ||
@@ -131,11 +134,14 @@ const SendPayMailProvider = (props) => {
         htmPayDayAry: htmPayDayAry,
       })
       .then((response) => {
-        if (response.status !== 200) {
+        if (
+          response.status !== 200 ||
+          response.data.ResultCodeVo.resultCode !== "200"
+        ) {
           alert("오류");
         } else {
           var payrollList = [];
-          const data = response.data;
+          const data = response.data.PayMailVo;
           data.map((item, index) =>
             payrollList.push({
               no: index + 1,
