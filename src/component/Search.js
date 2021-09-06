@@ -12,6 +12,18 @@ import CheckBoxIcon from "@material-ui/icons/CheckBox";
 import { useEffect } from "react";
 import axios from "axios";
 
+import { Cookies } from "react-cookie";
+
+const cookies = new Cookies();
+
+export const setCookies = (name, value, option) => {
+  return cookies.set(name, value, { ...option });
+};
+
+export const getCookies = (name) => {
+  return cookies.get(name);
+};
+
 //var url = "https://api.himgt.net/payMail/searchPayday";
 const icon = <CheckBoxOutlineBlankIcon fontSize="small" />;
 const checkedIcon = <CheckBoxIcon fontSize="small" />;
@@ -104,9 +116,24 @@ const TopMenu = () => {
   ];
 
   var test = [];
+  /*
   useEffect(() => {
+    console.log(
+      "sessionStorage.getItem(JSESSIONID)",
+      sessionStorage.getItem("JSESSIONID")
+    );
+   
     axios
-      .post("https://api.himgt.net/payMail/searchPayday")
+      .post(
+        "https://api.himgt.net/payMail/searchPayday",
+        {},
+        {
+          headers: {
+            withCredentials: true,
+            authorization: "Bearer " + sessionStorage.getItem("JSESSIONID"),
+          },
+        }
+      )
       .then((response) => {
         if (
           response.status !== 200 ||
@@ -123,10 +150,19 @@ const TopMenu = () => {
         }
       })
       .catch((e) => {
-        alert("Error!! 관리자에게 문의하세요.");
+        alert("Error!! 관리자에게 문의하세요.", e);
       });
     axios
-      .post("https://api.himgt.net/payMail/getAutoComplete")
+      .post(
+        "https://api.himgt.net/payMail/getAutoComplete",
+        {},
+        {
+          headers: {
+            withCredentials: true,
+            authorization: "Bearer " + sessionStorage.getItem("JSESSIONID"),
+          },
+        }
+      )
       .then((response) => {
         if (
           response.status !== 200 ||
@@ -150,7 +186,7 @@ const TopMenu = () => {
         alert("Error!! 관리자에게 문의하세요.");
       });
   }, []);
-
+*/
   return (
     <div className={classes.menuc}>
       <SelectBox

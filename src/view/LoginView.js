@@ -31,72 +31,34 @@ const LoginView = ({ history }) => {
 
   const onLogin = () => {
     console.log("id", id, "password", password);
-    axios
-      .post(url, { htmComId: id, htmComPass: password })
-      .then((response) => {
-        console.log("response.data.ResultCodeVo", response.data.ResultCodeVo);
-        if (response.data.ResultCodeVo.resultCode !== "200") {
-          alert("아이디 또는 비밀번호를 확인하세요.");
-        } else {
-          userActions.setUserid(id);
-          userActions.setUserpw(password);
+    axios.post(url, { htmComId: id, htmComPass: password }).then((response) => {
+      console.log("response.data.ResultCodeVo", response.data.ResultCodeVo);
+      if (response.data.ResultCodeVo.resultCode !== "200") {
+        alert("아이디 또는 비밀번호를 확인하세요.");
+      } else {
+        userActions.setUserid(id);
+        userActions.setUserpw(password);
 
-          // userActions.setSabun(response.data.resultMsg);
-          sessionStorage.setItem("userid", id);
-          sessionStorage.setItem("userpw", password);
-          sessionStorage.setItem(
-            "JSESSIONID",
-            response.data.PayMailVo.jsessionid
-          );
-          console.log("JSESSIONID", response.data.PayMailVo.jsessionid);
-          sessionStorage.setItem("sabun", response.data.PayMailVo.htmPerSabun);
-          /* history.push({
-            pathname: "/",
-            state: {
-              userid: id,
-              userpw: password,
-              sabun: response.data.PayMailVo.htmPerSabun,
-              //JSESSIONID: response.data.PayMailVo.jsessionid,
-            },
-          });
-          */
-          axios
-            .post(
-              "https://api.himgt.net/payMail/getAutoComplete",
-              {},
-              {
-                headers: {
-                  credentials: "include",
-                },
-              }
-            )
-            .then((response) => {
-              if (
-                response.status !== 200 ||
-                response.data.ResultCodeVo.resultCode !== 200
-              ) {
-                alert("오류");
-                console.log(
-                  "response.status !== 2002222222222",
-                  response.status !== 200,
-                  response.data
-                );
-              } else {
-                console.log(" response.data", response.data.PayMailVo);
-                const data = response.data.PayMailVo;
-                console.log("data", data);
-                //setAutoCompleteList(data);
-                //setSearchComNm(data);
-              }
-            })
-            .catch((e) => {
-              alert("Error!! 관리자에게 문의하세요.");
-            });
-        }
-      })
-      .catch((e) => {
-        alert("Error!! 관리자에게 문의하세요.");
-      });
+        // userActions.setSabun(response.data.resultMsg);
+        sessionStorage.setItem("userid", id);
+        sessionStorage.setItem("userpw", password);
+        sessionStorage.setItem(
+          "JSESSIONID",
+          response.data.PayMailVo.jsessionid
+        );
+        console.log("JSESSIONID", response.data.PayMailVo.jsessionid);
+        sessionStorage.setItem("sabun", response.data.PayMailVo.htmPerSabun);
+        history.push({
+          pathname: "/",
+          state: {
+            userid: id,
+            userpw: password,
+            sabun: response.data.PayMailVo.htmPerSabun,
+            JSESSIONID: response.data.PayMailVo.jsessionid,
+          },
+        });
+      }
+    });
   };
 
   const test = 1;
