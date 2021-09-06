@@ -10,8 +10,8 @@ function App() {
   return (
     <PayrollProvider>
       <SendPayMailProvider>
-        <Route path="/" component={Payroll} exact={true} />
-        <Route path="/login" component={LoginView} />
+        <Route path="/login" component={Payroll} />
+        <Route path="/" component={LoginView} exact={true} />
         <Route path="/history" component={ModalForm} />
         <Route path="/confirm" component={ConfirmBox} />
       </SendPayMailProvider>

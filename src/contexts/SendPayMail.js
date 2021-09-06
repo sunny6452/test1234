@@ -61,8 +61,8 @@ const SendPayMailProvider = (props) => {
     } */
     console.log("selectedPayday.length : ", selectedPayday.length);
     var confirm = "정말 발송하시겠습니까?";
-    window.confirm(confirm) &&
-      axios
+    /* window.confirm(confirm) &&
+     axios
         .post("https://api.himgt.net/payMail/sendPayMail", {
           htmYy: searchyy,
           htmMm: searchMM,
@@ -87,6 +87,7 @@ const SendPayMailProvider = (props) => {
         .catch((e) => {
           alert("Error!! 관리자에게 문의하세요.");
         });
+        */
   };
 
   const getPayMailPreview = (
@@ -125,6 +126,7 @@ const SendPayMailProvider = (props) => {
     if (htmComCdAry.length === 0) {
       alert("선택하지 않을 경우 리스트의 모든 회사에 급여명세서가 발송됩니다.");
     }
+    /*
     axios
       .post("https://api.himgt.net/payMail/getPayMailPreView", {
         htmYy: htmYy,
@@ -159,6 +161,7 @@ const SendPayMailProvider = (props) => {
       .catch((e) => {
         alert("Error!! 관리자에게 문의하세요.");
       });
+      */
   };
 
   const value = {

@@ -28,7 +28,7 @@ const LoginView = ({ history }) => {
       setPassword(localStorage.getItem("pass"));
     }
   }, []);
-
+  /*
   const onLogin = () => {
     console.log("id", id, "password", password);
     axios.post(url, { htmComId: id, htmComPass: password }).then((response) => {
@@ -60,7 +60,7 @@ const LoginView = ({ history }) => {
       }
     });
   };
-
+*/
   const test = 1;
 
   return test === 1 ? (
@@ -72,7 +72,7 @@ const LoginView = ({ history }) => {
         setPassword={setPassword}
         isRemember={isRemember}
         setIsRemember={setIsRemember}
-        onLogin={onLogin}
+        // onLogin={onLogin}
       />
     </StyledLogin>
   ) : (
@@ -88,7 +88,7 @@ const LoginView = ({ history }) => {
               setPassword={setPassword}
               isRemember={isRemember}
               setIsRemember={setIsRemember}
-              onLogin={onLogin}
+              //  onLogin={onLogin}
             />
           </StyledLogin>
         );
