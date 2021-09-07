@@ -1,19 +1,19 @@
-import React from 'react';
-import TextField from '@material-ui/core/TextField';
-import { makeStyles } from '@material-ui/core/styles';
+import React from "react";
+import TextField from "@material-ui/core/TextField";
+import { makeStyles } from "@material-ui/core/styles";
 
 const LoginInput = (props) => {
   const useStyles = makeStyles(() => ({
     id: {
-      overflow: 'hidden',
+      overflow: "hidden",
       borderRadius: 10,
       opacity: 0.7,
       width: 270,
       height: 45,
-      '& label': {
-        fontSize: '14px',
-        fontWeight: 'bold',
-        lineHeight: '20px',
+      "& label": {
+        fontSize: "14px",
+        fontWeight: "bold",
+        lineHeight: "20px",
         marginTop: -4,
       },
     },
@@ -22,6 +22,7 @@ const LoginInput = (props) => {
   return (
     <div>
       <TextField
+        autoComplete="off"
         label={props.label}
         variant="filled"
         size="small"
@@ -32,9 +33,9 @@ const LoginInput = (props) => {
           //props.setAllList(props.lcst(props.inputName, e.target.value));
         }}
         value={props.userValue}
-        type={props.label === '비밀번호' ? 'password' : ''}
+        type={props.label === "비밀번호" ? "password" : ""}
         style={
-          props.label === '비밀번호' ? { marginTop: 10 } : { marginTop: 100 }
+          props.label === "비밀번호" ? { marginTop: 10 } : { marginTop: 100 }
         }
       />
     </div>

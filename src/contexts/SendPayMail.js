@@ -43,7 +43,7 @@ const SendPayMailProvider = (props) => {
       htmComDbAry
     );
 
-    /* var trimCheck = / /gi;
+    var trimCheck = / /gi;
     var emailCheck = /^[A-Za-z0-9_\.\-]+@[A-Za-z0-9\-]+\.[A-Za-z0-9\-]+/;
     if (!emailCheck.test(htmInsaPerEmail)) {
       //이메일 형식체크
@@ -58,11 +58,11 @@ const SendPayMailProvider = (props) => {
       //발신자 정보 미입력시
       alert("발신자 정보를 확인하세요.");
       return;
-    } */
+    }
     console.log("selectedPayday.length : ", selectedPayday.length);
     var confirm = "정말 발송하시겠습니까?";
-    /* window.confirm(confirm) &&
-     axios
+    window.confirm(confirm) &&
+      axios
         .post("https://api.himgt.net/payMail/sendPayMail", {
           htmYy: searchyy,
           htmMm: searchMM,
@@ -87,7 +87,6 @@ const SendPayMailProvider = (props) => {
         .catch((e) => {
           alert("Error!! 관리자에게 문의하세요.");
         });
-        */
   };
 
   const getPayMailPreview = (
@@ -126,7 +125,7 @@ const SendPayMailProvider = (props) => {
     if (htmComCdAry.length === 0) {
       alert("선택하지 않을 경우 리스트의 모든 회사에 급여명세서가 발송됩니다.");
     }
-    /*
+
     axios
       .post("https://api.himgt.net/payMail/getPayMailPreView", {
         htmYy: htmYy,
@@ -161,7 +160,6 @@ const SendPayMailProvider = (props) => {
       .catch((e) => {
         alert("Error!! 관리자에게 문의하세요.");
       });
-      */
   };
 
   const value = {

@@ -54,12 +54,13 @@ const TopMenu = () => {
       },
     },
     Autocomplete: {
-      position: "absolute",
-      top: "85px",
-      left: "1080px",
+      position: "relative",
+      left: "1110px",
+      marginTop: "-85px",
     },
+
     popperDisablePortal: {
-      left: 1080,
+      left: 1140,
     },
     auto: {
       color: "rgba(0, 0, 0, 0.87)",
@@ -116,21 +117,21 @@ const TopMenu = () => {
   ];
 
   var test = [];
-  /*
+
   useEffect(() => {
     console.log(
       "sessionStorage.getItem(JSESSIONID)",
       sessionStorage.getItem("JSESSIONID")
     );
-   
+
     axios
       .post(
         "https://api.himgt.net/payMail/searchPayday",
         {},
         {
           headers: {
-            withCredentials: true,
-            authorization: "Bearer " + sessionStorage.getItem("JSESSIONID"),
+            //withCredentials: true,
+            authorization: sessionStorage.getItem("JSESSIONID"),
           },
         }
       )
@@ -158,8 +159,8 @@ const TopMenu = () => {
         {},
         {
           headers: {
-            withCredentials: true,
-            authorization: "Bearer " + sessionStorage.getItem("JSESSIONID"),
+            //withCredentials: true,
+            authorization: sessionStorage.getItem("JSESSIONID"),
           },
         }
       )
@@ -186,7 +187,7 @@ const TopMenu = () => {
         alert("Error!! 관리자에게 문의하세요.");
       });
   }, []);
-*/
+
   return (
     <div className={classes.menuc}>
       <SelectBox
@@ -279,8 +280,9 @@ const TopMenu = () => {
         buttonName="검색"
         onClick={(e) => {
           payrollActions.onSearch(yy, MM, payday, yastatus, test);
-          //  payrollActions.setSelectedDBName([]);
-          //   payrollActions.setSelectedComCd([]);
+          // payrollActions.setSelectedDBName([]);
+          //  payrollActions.setSelectedComCd([]);
+          //  payrollActions.setSelectedPayday([]);
         }}
       />
     </div>

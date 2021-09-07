@@ -1,3 +1,4 @@
+/*
 export const lcst = (key, value, isClear) => {
   localStorage.setItem(key, value);
   if (isClear) {
@@ -44,3 +45,5 @@ export const idCheck = (id, password) => {
   }
   return true;
 };
+
+*/

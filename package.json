@@ -1,11 +1,10 @@
 {
-  "homepage": "http://sunny6452.github.io/payrolltest",
+  "homepage": "http://sunny6452.github.io/test1234",
   "name": "payroll",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
     "@material-ui/core": "^4.11.4",
-    "@material-ui/data-grid": "*",
     "@material-ui/icons": "^4.11.2",
     "@material-ui/lab": "*",
     "@testing-library/jest-dom": "^5.11.4",

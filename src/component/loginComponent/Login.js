@@ -1,9 +1,9 @@
-import { makeStyles } from '@material-ui/core/styles';
-import Checkbox from '@material-ui/core/Checkbox';
-import Button from '@material-ui/core/Button';
-import React, { useCallback } from 'react';
-import LoginInput from './LoginInput';
-import { lcst } from '../../common/globalFunction';
+import { makeStyles } from "@material-ui/core/styles";
+import Checkbox from "@material-ui/core/Checkbox";
+import Button from "@material-ui/core/Button";
+import React, { useCallback } from "react";
+import LoginInput from "./LoginInput";
+import { lcst } from "../../common/globalFunction";
 
 const Login = ({
   onLogin,
@@ -17,39 +17,39 @@ const Login = ({
 }) => {
   const useStyles = makeStyles(() => ({
     Section: {
-      position: 'absolute',
-      width: '400px',
-      backgroundColor: '#ffffff',
-      borderRadius: '10px',
+      position: "absolute",
+      width: "400px",
+      backgroundColor: "#ffffff",
+      borderRadius: "10px",
     },
     loginSection: {
-      height: '350px',
-      top: '190px',
-      borderRadius: '10px',
-      backgroundColor: '#ffffff',
+      height: "350px",
+      top: "190px",
+      borderRadius: "10px",
+      backgroundColor: "#ffffff",
     },
     loginTitle: {
-      position: 'absolute',
-      marginTop: '55px',
-      marginLeft: '70px',
-      fontWeight: 'bold',
-      fontSize: '18px',
-      lineHeight: '26px',
-      letterSpacing: '-0.01em',
+      position: "absolute",
+      marginTop: "55px",
+      marginLeft: "70px",
+      fontWeight: "bold",
+      fontSize: "18px",
+      lineHeight: "26px",
+      letterSpacing: "-0.01em",
     },
     checkedTitle: {
-      fontSize: '14px',
-      lineHeight: '26px',
-      color: '#666666',
+      fontSize: "14px",
+      lineHeight: "26px",
+      color: "#666666",
     },
     searchButton: {
-      '&.MuiButton-root:hover': {
-        backgroundColor: '#3474E4',
-        fontWeight: 'bold',
+      "&.MuiButton-root:hover": {
+        backgroundColor: "#3474E4",
+        fontWeight: "bold",
       },
       width: 270,
       height: 45,
-      backgroundColor: '#3474E4',
+      backgroundColor: "#3474E4",
       borderRadius: 10,
       marginTop: 10,
       fontSize: 16,
@@ -82,15 +82,15 @@ const Login = ({
       <Checkbox
         size="small"
         className={classes.loginChecked}
-        inputProps={{ 'aria-label': 'checkbox with small size' }}
+        inputProps={{ "aria-label": "checkbox with small size" }}
         checked={isRemember}
         onChange={useCallback(
           (e) => {
             setIsRemember((isRemember) => e.target.checked);
-            lcst('isRemember', e.target.checked);
-            if (!e.target.checked) lcst('', '', true);
+            lcst("isRemember", e.target.checked);
+            if (!e.target.checked) lcst("", "", true);
           },
-          [setIsRemember],
+          [setIsRemember]
         )}
       />
       <span className={classes.checkedTitle}>아이디/비밀번호 저장</span>

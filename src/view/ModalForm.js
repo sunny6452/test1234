@@ -66,7 +66,7 @@ const ModalForm = ({ history }) => {
   const onClose = (e) => {
     payrollActions.setSendFailedRows([]);
     payrollActions.setTotalResultListRows([]);
-    history.push("./");
+    history.push("/payroll");
   };
 
   return (
@@ -175,7 +175,7 @@ export const ConfirmBox = ({ history }) => {
                   selectedComCd,
                   selectedDBName
                 );
-                history.push("/");
+                history.push("/payroll");
               }}
             />
             <PayrollButton
@@ -186,7 +186,7 @@ export const ConfirmBox = ({ history }) => {
                 setSelectedComCd([]);
                 setSelectedDBName([]);
                 setSelectedPayday([]);
-                history.push("/");
+                history.push("/payroll");
               }}
             />
           </div>

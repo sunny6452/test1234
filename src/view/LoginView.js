@@ -8,7 +8,7 @@ import UserContext from "../contexts/userInfo";
 const StyledLogin = styled.div`
   margin: 0 auto;
   text-align: center;
-  font-family: Noto Sans KR;
+  //font-family: Noto Sans KR;
   font-style: normal;
   width: 400px;
   background-color: #ffffff;
@@ -28,7 +28,7 @@ const LoginView = ({ history }) => {
       setPassword(localStorage.getItem("pass"));
     }
   }, []);
-  /*
+
   const onLogin = () => {
     console.log("id", id, "password", password);
     axios.post(url, { htmComId: id, htmComPass: password }).then((response) => {
@@ -49,7 +49,7 @@ const LoginView = ({ history }) => {
         console.log("JSESSIONID", response.data.PayMailVo.jsessionid);
         sessionStorage.setItem("sabun", response.data.PayMailVo.htmPerSabun);
         history.push({
-          pathname: "/",
+          pathname: "/payroll",
           state: {
             userid: id,
             userpw: password,
@@ -60,40 +60,21 @@ const LoginView = ({ history }) => {
       }
     });
   };
-*/
-  const test = 1;
 
-  return test === 1 ? (
+  return (
     <StyledLogin>
-      <Login
-        id={id}
-        setId={setId}
-        password={password}
-        setPassword={setPassword}
-        isRemember={isRemember}
-        setIsRemember={setIsRemember}
-        // onLogin={onLogin}
-      />
+      <form>
+        <Login
+          id={id}
+          setId={setId}
+          password={password}
+          setPassword={setPassword}
+          isRemember={isRemember}
+          setIsRemember={setIsRemember}
+          onLogin={onLogin}
+        />
+      </form>
     </StyledLogin>
-  ) : (
-    <UserContext.Consumer>
-      {(value) => {
-        console.log(value);
-        return (
-          <StyledLogin>
-            <Login
-              id={value.userState.userid}
-              setId={setId}
-              password={password}
-              setPassword={setPassword}
-              isRemember={isRemember}
-              setIsRemember={setIsRemember}
-              //  onLogin={onLogin}
-            />
-          </StyledLogin>
-        );
-      }}
-    </UserContext.Consumer>
   );
 };
 

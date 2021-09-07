@@ -263,7 +263,7 @@ const PayrollTable = (props) => {
                                       0
                                     );
                                     payrollActions.setHistoryList(true);
-                                    props.history.push("./history");
+                                    props.history.push("./");
                                   }
                                 }}
                               >

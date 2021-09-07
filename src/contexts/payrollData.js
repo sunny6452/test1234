@@ -70,7 +70,7 @@ const PayrollProvider = (props) => {
     else if (yastatus === "완료") htmState = 8;
     else if (yastatus === "오류") htmState = 9;
     else if (yastatus === "발송이력없음") htmState = 999;
-    /*
+
     axios
       .post("https://api.himgt.net/payMail/mainLoad", {
         htmYy: yy,
@@ -134,12 +134,10 @@ const PayrollProvider = (props) => {
       .catch((e) => {
         alert("Error!! 관리자에게 문의하세요.");
       });
-      */
   };
 
   const onSendFailed = (htmComCd, htmSeq, htmComNm, checkNum) => {
     if (htmSeq !== null) {
-      /*
       axios
         .post("https://api.himgt.net/payMail/getResultListLoad", {
           htmComCd: htmComCd,
@@ -175,12 +173,10 @@ const PayrollProvider = (props) => {
       setSendFailedRows([]);
     }
     setHtmComNm(htmComNm);
-    */
-    }
   };
 
   const getTotalResultList = (htmComCd, htmYy, htmMm, htmPayDay) => {
-    /*  axios
+    axios
       .post("https://api.himgt.net/payMail/getToTalResultListLoad", {
         htmComCd: htmComCd,
         htmYy: htmYy,
@@ -236,7 +232,6 @@ const PayrollProvider = (props) => {
       .catch((e) => {
         alert("Error!! 관리자에게 문의하세요.");
       });
-      */
   };
 
   const value = {

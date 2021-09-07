@@ -16,6 +16,7 @@ const useStyles = makeStyles({
   search: {
     float: "right",
     marginRight: 50,
+    marginTop: -50,
   },
   more: {
     padding: 0,
